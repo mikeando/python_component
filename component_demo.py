@@ -33,6 +33,14 @@ class ManagerComponent(Component):
         return f"ManagerComponent({self.name!r})"
 
 
+class ParanoidManagerComponent(ManagerComponent):
+    def __str__(self):
+        return repr(self)
+
+    def __repr__(self):
+        return f"ParanoidManagerComponent({self.name!r})"
+
+
 root = ComponentCollection()
 
 print("--- Getting the manager before he's added is an error ---")
@@ -49,6 +57,14 @@ print("--- Trying to add a second manager ---")
 
 try:
     root.add_component(ManagerComponent("another manager"))
+except Exception as e:
+    print("Expected Failure!!!")
+    print(e)
+
+print("--- Adding a Paranoid Manager is not OK as its derived from Manager ---")
+
+try:
+    root.add_component(ParanoidManagerComponent("another manager"))
 except Exception as e:
     print("Expected Failure!!!")
     print(e)

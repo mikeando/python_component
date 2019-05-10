@@ -140,7 +140,7 @@ class ComponentCollection(object):
             state = self._type_map.get(t)
             if state is not None and not state.can_add_instance():
                 raise Exception(
-                    f"Unable to add instance of type {component_type.__name__} as it is base type {t.__name__} is marked unique and already has a component with that base type has allready been added"
+                    f"Unable to add instance of type {component_type.__name__} as its base type {t.__name__} is marked unique and a component with that base type has allready been added"
                 )
 
         # We shouldn't get any failures here, as we've already checked
