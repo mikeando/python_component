@@ -1,4 +1,4 @@
-from component import Component, ComponentId
+from component import Component, ComponentCollection
 
 
 class DancerComponent(Component):
@@ -7,7 +7,7 @@ class DancerComponent(Component):
         self.name = name
 
     def dance(self):
-        print(f"A dancing {self.name}")
+        print(f"  {self.name} is dancing")
 
 
 class ManagerComponent(Component):
@@ -15,38 +15,39 @@ class ManagerComponent(Component):
         super().__init__()
         self.name = name
 
-    def make_c1_dance(self):
-        print(f"{self.name} is making child1 dance...")
-        c = self.get_component(ComponentId("child1"))
-        if c is None:
-            print("No child1 to make dance...")
-            return
-        if not isinstance(c, DancerComponent):
-            print(f"Child1 is not a dancer, its a {type(c)}")
-            return
-        c.dance()
+    def make_them_dance(self):
+        for dancer in self.parent.get_components(DancerComponent):
+            print(f"{self.name} is making {dancer.name} dance...")
+            dancer.dance()
 
 
-root = ManagerComponent("the root")
-child1 = DancerComponent("a child")
-child2 = DancerComponent("another child")
-manager = ManagerComponent("a manager")
-root.add_component(ComponentId("manager"), manager)
+root = ComponentCollection()
 
-print(f"root.components = {root.components}")
+root.add_component(ManagerComponent("the manager"), unique=True)
 
-manager.make_c1_dance()
+print("--- Trying to add a second manager ---")
 
-root.add_component(ComponentId("child1"), child1)
-root.add_component(ComponentId("child2"), child2)
+try:
+    root.add_component(ManagerComponent("another manager"))
+except Exception as e:
+    print("Expected Failure!!!")
+    print(e)
 
-root.make_c1_dance()
-manager.make_c1_dance()
+print("--- Adding three dancers is fine since they're not unique ---")
 
-root.add_component(ComponentId("child1"), ManagerComponent("ignore me"), replace=True)
-# root.add_component(ComponentId("child3"), child2)
+root.add_component(DancerComponent("dancer 1"))
+root.add_component(DancerComponent("dancer 2"))
+root.add_component(DancerComponent("dancer 3"), unique=False)
 
-manager.make_c1_dance()
+print("--- But if we try to add a fourth and make it unqiue - that will fail ---")
+try:
+    root.add_component(DancerComponent("dancer 4"), unique=True)
+except Exception as e:
+    print("Expected Failure!!!")
+    print(e)
+
+print("--- Calling manager.make_them_dance ---")
+root.get_component(ManagerComponent).make_them_dance()
 
 print("--- Everybody dance ---")
 
@@ -56,8 +57,9 @@ def dance_if_able(x):
         x.dance()
         return
     if isinstance(x, ManagerComponent):
-        print(f"{x.name} is a manager, and managers dont dance")
+        print(f"  {x.name} is a manager, and managers dont dance")
         return
 
 
-child1.on_components_and_self(dance_if_able)
+for c in root.components():
+    dance_if_able(c)
