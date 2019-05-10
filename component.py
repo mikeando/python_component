@@ -51,30 +51,11 @@ class ComponentCollection(object):
             return None
 
         def mark_as(self, is_unique: Optional[bool]):
-            def _u(is_unique: bool) -> str:
-                return "unique" if is_unique else "non-unique"
-
-            # If we're not trying to enforce anything, or we're enforcing something that has already
-            # been enforced, then we can skip it
-            if (is_unique is None) or (is_unique == self.is_unique):
-                return
-
-            if self.is_unique is not None:
-                # We can only get here when the dont match
-                raise Exception(
-                    f"Trying to mark type {self.typekey.__name__} as {_u(is_unique)} but is already marked as {_u(self.is_unique)}"
-                )
-
-            # So we must be in the self.is_unique = None case
-            # If we're trying to mark it non-unique, thats OK
-            if is_unique:
-                if self.count > 1:
-                    raise Exception(
-                        f"Trying to mark type {self.typekey.__name__} as unique, but it already has {self.count} instances"
-                    )
-                self.is_unique = True
-            else:
-                self.is_unique = False
+            mesg = self.can_mark_as(is_unique)
+            if mesg is not None:
+                raise Exception(mesg)
+            if is_unique is not None:
+                self.is_unique = is_unique
 
         def can_add_instance(self):
             return self.count == 0 or not self.is_unique
