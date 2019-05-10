@@ -135,7 +135,7 @@ class ComponentCollection(object):
         # We then add each of the base types without enforcing the count
         for t in base_types:
             state = self._type_map.setdefault(
-                component_type, ComponentCollection._State(t, is_unique=None)
+                t, ComponentCollection._State(t, is_unique=None)
             )
             state.add_instance()
 
