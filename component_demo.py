@@ -98,6 +98,13 @@ print(f"components = {[x for x in root.components()]}")
 print("--- Calling manager.make_them_dance ---")
 root.get_component(ManagerComponent).make_them_dance()
 
+# Because of how we're written the typing on get_component, mypy
+# will know it returns a ManagerComponent and so complain that
+#
+# error: "ManagerComponent" has no attribute "hokey_pokey"
+#
+#      root.get_component(ManagerComponent).hokey_pokey()
+
 print("--- Everybody dance ---")
 
 
