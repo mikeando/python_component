@@ -119,3 +119,15 @@ def dance_if_able(x):
 
 for c in root.components():
     dance_if_able(c)
+
+print("--- We can get a component by its class or any of its base classes ---")
+
+c = ComponentCollection()
+c.add_component(ParanoidManagerComponent("dude"))
+
+p1 = c.get_component(ParanoidManagerComponent)
+p2 = c.get_component(ManagerComponent)
+
+print(f"p1 = c.get_component(ParanoidManagerComponent) = {p1}")
+print(f"p2 = c.get_component(ManagerComponent) = {p2}")
+print(f"(p1 == p2) = {p1 == p2}")
