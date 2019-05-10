@@ -1,44 +1,29 @@
 from component import Component, ComponentCollection
 
 
-class DancerComponent(Component):
+class BaseComponent(Component):
     def __init__(self, name: str):
         super().__init__()
         self.name = name
-
-    def dance(self):
-        print(f"  {self.name} is dancing")
 
     def __str__(self):
         return repr(self)
 
     def __repr__(self):
-        return f"DancerComponent({self.name!r})"
+        return f"{type(self).__name__}({self.name!r})"
 
+class DancerComponent(BaseComponent):
+    def dance(self):
+        print(f"  {self.name} is dancing")
 
-class ManagerComponent(Component):
-    def __init__(self, name: str):
-        super().__init__()
-        self.name = name
-
+class ManagerComponent(BaseComponent):
     def make_them_dance(self):
         for dancer in self.parent.get_components(DancerComponent):
             print(f"{self.name} is making {dancer.name} dance...")
             dancer.dance()
 
-    def __str__(self):
-        return repr(self)
-
-    def __repr__(self):
-        return f"ManagerComponent({self.name!r})"
-
-
 class ParanoidManagerComponent(ManagerComponent):
-    def __str__(self):
-        return repr(self)
-
-    def __repr__(self):
-        return f"ParanoidManagerComponent({self.name!r})"
+    pass
 
 
 root = ComponentCollection()
