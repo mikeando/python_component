@@ -99,10 +99,12 @@ class ComponentCollection(object):
     def get_component(self, component_type: Type[T]) -> T:
         v: List[T] = [x for x in self.components() if isinstance(x, component_type)]
         if len(v) == 0:
-            raise Exception(f"No component of type {component_type} in collection")
+            raise Exception(
+                f"No component of type {component_type.__name__} in collection"
+            )
         if len(v) > 1:
             raise Exception(
-                f"More than one component of type {component_type} in collection"
+                f"More than one component of type {component_type.__name__} in collection"
             )
         return v[0]
 
