@@ -43,7 +43,7 @@ root.add_component(ComponentId("child2"), child2)
 root.make_c1_dance()
 manager.make_c1_dance()
 
-root.add_component(ComponentId("child1"), ManagerComponent("ignore me"))
+root.add_component(ComponentId("child1"), ManagerComponent("ignore me"), replace=True)
 # root.add_component(ComponentId("child3"), child2)
 
 manager.make_c1_dance()

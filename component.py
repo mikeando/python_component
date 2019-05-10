@@ -27,9 +27,16 @@ class Component(object):
     def get_component(self, cid: ComponentId) -> Optional["Component"]:
         return next((v for k, v in self.components() if k == cid), None)
 
-    def add_component(self, id: ComponentId, component: "Component"):
+    def add_component(self, id: ComponentId, component: "Component", *, replace=False):
         if component._parent is not None:
             raise Exception("component already has a parent")
+
+        if not replace and id in self._components:
+            raise Exception("component with that id already exists in this component")
+
+        # TODO: We should probably check whether we're overriding a component
+        # in the parent chain too.
+
         component._parent = self
         self._components[id] = component
 
